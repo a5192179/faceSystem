@@ -28,7 +28,7 @@ class faceVerifier:
         minIdentity = 'null'
         for identity in self.facebase:
             if identity == 'nextId':
-                break
+                continue
             dist = distance.distance(vec, np.array(self.facebase[identity]['vec']), 1)
             if minDist < 0 or minDist > dist:
                 minDist = dist
@@ -73,3 +73,8 @@ class faceVerifier:
             genders.append(gender)
         return bInBases, identities, ages, genders
 
+    def getAgeAndGender(self, identity):
+        if not identity in self.facebase:
+            print(identity, 'is not in facebase!')
+            return []
+        return self.facebase[identity]['age'], self.facebase[identity]['gender']
