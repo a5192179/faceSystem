@@ -31,6 +31,7 @@ def showResult(mainImg, mainImgInfo, others, othersInfos, infos):
     wLeft = 0
     wRight = mainImgShow.shape[1]
     background[hup:hDown, wLeft:wRight, :] = mainImgShow
+    cv2.putText(background, mainImgInfo, (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
 
     for i in range(min(maxOtherNum, len(others))):
         otherImgShow = resizeImgIntoFrame(others[i], otherEachH - 20 - 2*border, otherW - border) #上下留5，字30
@@ -47,9 +48,13 @@ def showResult(mainImg, mainImgInfo, others, othersInfos, infos):
         print(i)
         imgStr = infos[i]
         cv2.putText(background, imgStr, (border, 15 + mainH + infoEachH * (i - begin)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
-    # cv2.imshow('ori', mainImgShow)
-    cv2.imshow('img', background)
-    cv2.waitKey(41)
+    # ===========================================
+    savePath = '../output/testFaceResult'
+    imgName = mainImgInfo + '.jpg'
+    cv2.imwrite(savePath + '/' + imgName, background)
+    # ===========================================
+    # cv2.imshow('img', background)
+    # cv2.waitKey(41)
 
 
 if __name__ == "__main__":

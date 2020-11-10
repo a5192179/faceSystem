@@ -8,6 +8,7 @@ import datetime
 from module.detectFace.algo import detectFaceCaffe
 from module.verifyFace.algo import verifyFace
 from module.statisticTime import statisticTime
+from module.detectSideFace.algo import detectSideFace
 
 class singleCameraProcessor(Process):
     def __init__(self, config, inputStream, cameraID):
@@ -19,6 +20,7 @@ class singleCameraProcessor(Process):
     def run(self):
         print('run')
         faceDetector = detectFaceCaffe.faceDetector()
+        sideFaceDetector = detectSideFace.sideFaceDetector()
         faceVerifier = verifyFace.faceVerifier()
         timeStatistician = statisticTime.timeStatistician(faceVerifier.facebase)
         print('load model end------------')
@@ -45,8 +47,10 @@ class singleCameraProcessor(Process):
             #     continue
             imgTime = nowTime
             # detect faces
-            faces = faceDetector.detectFace(frame)
-            print('detect face', len(faces))
+            oriFaces = faceDetector.detectFace(frame)
+            print('detect face', len(oriFaces))
+            faces = sideFaceDetector.getFrontFaces(oriFaces)
+            print('front face', len(faces))
             # verify faces
             bInBases, identities, ages, genders = faceVerifier.verifyFaces(faces)
             #==================================
@@ -79,22 +83,22 @@ class singleCameraProcessor(Process):
                 age = ages[index]
                 gender = genders[index]
                 stayTime = stayTimes[index]
-                width = face.shape[1]
-                high = face.shape[0]
-                print('rate:', high/width, 'high:', high, 'width:', width)
-                imgStr = str(round(high/width, 2)) + ',' + str(bInBase) + ',' + str(identity) + ',' + age + ',' + gender + ',' + str(round(stayTime, 2))
+                # width = face.shape[1]
+                # high = face.shape[0]
+                # print('rate:', high/width, 'high:', high, 'width:', width)
+                imgStr = str(bInBase) + ',' + str(identity) + ',' + age + ',' + gender + ',' + str(round(stayTime, 2))
                 faceInfos.append(imgStr)
+                index += 1
                 # cv2.putText(face, imgStr, (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255,255,255), 1, cv2.LINE_AA)
                 # cv2.imshow('frame', face)
                 # cv2.waitKey(500)
                 # =============================
-                savePath = '../data/testFace'
-                for i_face in range(len(faces)):
-                    imgName = str(frameId) + '-' + str(identities[i_face]) + '.jpg'
-                    cv2.imwrite(savePath + '/' + imgName, faces[i_face])
+                # savePath = '../output/testFaceResult'
+                # for i_face in range(len(faces)):
+                #     imgName = str(frameId) + '-' + str(identities[i_face]) + '.jpg'
+                #     cv2.imwrite(savePath + '/' + imgName, faces[i_face])
                 # =============================
-                index += 1
-            
+            print('finalInfos:', len(finalInfos))
             showResult.showResult(frame, str(frameId), faces, faceInfos, finalInfos)
             print('-------------frame end, id:', frameId, '--------------')
             # return bInBases, identities, ages, genders, stayTimes

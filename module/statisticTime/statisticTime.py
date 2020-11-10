@@ -1,7 +1,8 @@
 import datetime
 class timeStatistician:
-    def __init__(self, facebase):
+    def __init__(self, facebase, leaveThreshold = 60):
         self.timebase = {}
+        self.leaveThreshold = leaveThreshold #unit seconds
         for identity in facebase:
             beginTime = datetime.datetime(2020, 1, 1, 0, 0, 0, 0)
             lastTime = datetime.datetime(2020, 1, 1, 0, 0, 0, 0)
@@ -35,7 +36,7 @@ class timeStatistician:
         self.timebase[identity]['beginTime'] = imgTime
         self.timebase[identity]['lastTime'] = imgTime
 
-    def update(self, identity, imgTime, threshold = 180):
+    def update(self, identity, imgTime):
         '''
         threshold is the period between now and last seen, unit is second
         '''
@@ -43,7 +44,7 @@ class timeStatistician:
             print(identity, 'is not in database, insert new!')
             self.insert(identity, imgTime)
             return
-        if (imgTime - self.timebase[identity]['lastTime']).seconds > threshold:
+        if (imgTime - self.timebase[identity]['lastTime']).seconds > self.leaveThreshold:
             # new
             print('delta time：', (imgTime - self.timebase[identity]['lastTime']).seconds)
             self.reset(identity, imgTime)
@@ -60,7 +61,7 @@ class timeStatistician:
         # unit is second
         return stayTime
 
-    def getFinalStayTime(self, threshold = 180):
+    def getFinalStayTime(self):
         # if not identity in self.timebase:
         #     print('error, ', identity, 'is not in database!')
         #     return 0
@@ -68,7 +69,7 @@ class timeStatistician:
         for identity in self.timebase:
             if self.timebase[identity]['status'] == 'dormant':
                 continue
-            elif (self.timebase[identity]['lastTime'] - self.timebase[identity]['beginTime']).seconds > threshold:
+            elif (self.timebase[identity]['lastTime'] - self.timebase[identity]['beginTime']).seconds > self.leaveThreshold:
                 finalStayTime = (self.timebase[identity]['lastTime'] - self.timebase[identity]['beginTime']).seconds
                 finalStayTimes[identity] = finalStayTime / 60 #unit minute
                 self.timebase[identity]['status'] = 'dormant'
