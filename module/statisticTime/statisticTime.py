@@ -61,7 +61,7 @@ class timeStatistician:
         # unit is second
         return stayTime
 
-    def getFinalStayTime(self):
+    def getFinalStayTime(self, imgTime):
         # if not identity in self.timebase:
         #     print('error, ', identity, 'is not in database!')
         #     return 0
@@ -69,13 +69,13 @@ class timeStatistician:
         for identity in self.timebase:
             if self.timebase[identity]['status'] == 'dormant':
                 continue
-            elif (self.timebase[identity]['lastTime'] - self.timebase[identity]['beginTime']).seconds > self.leaveThreshold:
+            elif (imgTime - self.timebase[identity]['lastTime']).seconds > self.leaveThreshold:
                 finalStayTime = (self.timebase[identity]['lastTime'] - self.timebase[identity]['beginTime']).seconds
-                finalStayTimes[identity] = finalStayTime / 60 #unit minute
+                finalStayTimes[identity] = finalStayTime #unit second
                 self.timebase[identity]['status'] = 'dormant'
                 print('identity', identity, 
                       'go out, begin time:',self.timebase[identity]['beginTime'],
-                       'end time:', self.timebase[identity]['lastTime'])
+                       'end time:', imgTime)
         return finalStayTimes
 
     def getStayTimebyIdentities(self, identities, imgTime):
@@ -85,5 +85,5 @@ class timeStatistician:
             self.update(identity, imgTime)
             stayTime = self.getStayTime(identity)
             print('identity', identity, 'stayTime', stayTime, ' second')
-            stayTimes.append(stayTime / 60) # unit is minutes
+            stayTimes.append(stayTime) # unit is second
         return stayTimes

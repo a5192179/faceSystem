@@ -11,7 +11,7 @@ import shutil
 import os
  
 dataset = 'D:/project/touristAnalyse/data/testFace'
-output = 'D:/project/touristAnalyse/output/sideFaceResize'
+output = 'D:/project/touristAnalyse/output/sideFaceResizeBoundary'
 imagePaths = list(paths.list_images(dataset))
 # detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(
@@ -36,7 +36,8 @@ for (i, imagePath) in enumerate(imagePaths):
     v1 = fv * shape.parts()[1].y
     u3 = fu * shape.parts()[3].x #close to left boundary
     v3 = fv * shape.parts()[3].y
-    rate = u1 / (img.shape[1] - u3)
+    # rate = u1 / (img.shape[1] - u3)
+    rate = abs(u3 - u1) / img.shape[1]
     print('img:', imagePath, 'rate:', rate)
     oriFilePath = imagePath
     newFilePath = output + '/' + str(round(rate, 2)) + '-' + name

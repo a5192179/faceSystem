@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import math
+import os
 
 def resizeImgIntoFrame(img, H, W):
     imgH = img.shape[0]
@@ -11,7 +12,7 @@ def resizeImgIntoFrame(img, H, W):
     imgNew = cv2.resize(img, (newW, newH))
     return imgNew
 
-def showResult(mainImg, mainImgInfo, others, othersInfos, infos):
+def showResult(mainImg, mainImgInfo, others, othersInfos, infos, bShowResult, bSaveResult, savePath):
     border = 2
     mainW = 800
     mainH = 450
@@ -49,12 +50,13 @@ def showResult(mainImg, mainImgInfo, others, othersInfos, infos):
         imgStr = infos[i]
         cv2.putText(background, imgStr, (border, 15 + mainH + infoEachH * (i - begin)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
     # ===========================================
-    savePath = '../output/testFaceResult'
-    imgName = mainImgInfo + '.jpg'
-    cv2.imwrite(savePath + '/' + imgName, background)
+    if bSaveResult:
+        imgName = mainImgInfo + '.jpg'
+        cv2.imwrite(savePath + '/' + imgName, background)
     # ===========================================
-    # cv2.imshow('img', background)
-    # cv2.waitKey(41)
+    if bShowResult:
+        cv2.imshow('img', background)
+        cv2.waitKey(41)
 
 
 if __name__ == "__main__":

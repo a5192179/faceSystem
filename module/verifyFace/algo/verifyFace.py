@@ -9,7 +9,7 @@ import os
 
 # input a img, output whether is in facebase
 class faceVerifier:
-    def __init__(self, dataPath = '../data/facebase-good-small.json'):
+    def __init__(self, dataPath = '../data/facebase-good-small.json', similarThreshold = 0.245, ageScale = 1.0):
         if os.path.exists(dataPath):
             f = open(dataPath)
             content = f.read()
@@ -18,12 +18,13 @@ class faceVerifier:
             self.facebase = {}
         print('load facebase end, num:', len(self.facebase))
         self.faceEmbedder = embedFace.faceEmbedder()
-        self.ageGenderEstimater = estimateAgeGender.ageGenderEstimater()
+        self.ageGenderEstimater = estimateAgeGender.ageGenderEstimater(ageScale = ageScale)
+        self.similarThreshold = similarThreshold
 
     def insert(self, face, vec):
         pass
 
-    def search(self, face, vec, similarThreshold = 0.245):
+    def search(self, face, vec):
         minDist = -1
         minIdentity = 'null'
         for identity in self.facebase:
@@ -34,19 +35,19 @@ class faceVerifier:
                 minDist = dist
                 minIdentity = identity
         print('minIdentity:', minIdentity, 'minDist:', minDist)
-        if minDist < similarThreshold:
+        if minDist < self.similarThreshold:
             bInBase = True
             identity = minIdentity
             age = self.facebase[identity]['age']
             gender = self.facebase[identity]['gender']
         else:
             bInBase = False
-            identity = self.facebase['nextId']
+            identity = str(self.facebase['nextId'])
             self.facebase['nextId'] = self.facebase['nextId'] + 1
             age, gender = self.ageGenderEstimater.estimateAgeGenderbyArray(face)
             img = 'new'
             person = {'age':age, 'gender':gender, 'img':img, 'vec':vec.tolist()}
-            self.facebase[str(identity)] = person
+            self.facebase[identity] = person
         return bInBase, identity, age, gender
 
     def verifyFace(self, face):
