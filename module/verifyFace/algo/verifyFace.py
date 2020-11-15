@@ -1,6 +1,7 @@
 from module.embedFace.algo import embedFace
 from module.embedFace.myMath import distance
-from module.estimateAgeGender.algo import estimateAgeGender
+# from module.estimateAgeGender.algo import estimateAgeGender
+from module.estimateAgeGender.algo import estimateAgeGenderIS as estimateAgeGender
 import json
 from collections import OrderedDict
 import numpy as np
@@ -44,7 +45,7 @@ class faceVerifier:
             bInBase = False
             identity = str(self.facebase['nextId'])
             self.facebase['nextId'] = self.facebase['nextId'] + 1
-            age, gender = self.ageGenderEstimater.estimateAgeGenderbyArray(face)
+            age, gender = self.ageGenderEstimater.estimateAgeGender(face)
             img = 'new'
             person = {'age':age, 'gender':gender, 'img':img, 'vec':vec.tolist()}
             self.facebase[identity] = person

@@ -1,4 +1,4 @@
-libs = []
+# libs = []
 # keras==2.1.0
 import numpy as np
 import cv2
@@ -8,22 +8,22 @@ from module.estimateAgeGender.util.SSR_model import SSR_net
 import module.estimateAgeGender.util.Main_yolo as My
 from module.estimateAgeGender.util.ageLabel import age_label
 import tensorflow as tf
-try:
-    libs.append('tensorflow==' + tf.__version__ + '\n')
-except:
-    libs.append('tensorflow' + '\n')
+# try:
+#     libs.append('tensorflow==' + tf.__version__ + '\n')
+# except:
+#     libs.append('tensorflow' + '\n')
 from PIL import Image
 import PIL
-try:
-    libs.append('PIL==' + PIL.__version__ + '\n')
-except:
-    libs.append('PIL' + '\n')
+# try:
+#     libs.append('PIL==' + PIL.__version__ + '\n')
+# except:
+#     libs.append('PIL' + '\n')
 import os
 # =============================
-txtPath = './dependence.txt'
-with open(txtPath, "a") as f:
-    for line in libs:
-        f.write(line)
+# txtPath = './dependence.txt'
+# with open(txtPath, "a") as f:
+#     for line in libs:
+#         f.write(line)
 # =============================
 
 class ageGenderEstimater:
@@ -35,7 +35,7 @@ class ageGenderEstimater:
         self.pred_eyegalsses, self.pred_male = My.model_sex(self.detection_sess, pb_path_sex)
         self.ageScale = ageScale
 
-    def estimateAgeGenderbyArray(self, imgArray):
+    def estimateAgeGender(self, imgArray):
         # cv2.imshow('img', imgArray)
         # waitkey(0)
         im_data_age = cv2.resize(imgArray, (64, 64))

@@ -57,7 +57,7 @@ if __name__ == "__main__":
         # imgGray = cv2.cvtColor(imgColor, cv2.COLOR_BGR2GRAY)
         face = imgColor
         vec = faceEmbedder.embedFace(face)
-        age, gender = ageGenderEstimater.estimateAgeGenderbyArray(face)
+        age, gender = ageGenderEstimater.estimateAgeGender(face)
         # print(vec.shape)
         # print('name', name, 'vec0:', vec[0][0], 'vec-1:', vec[0][-1])
         # add the name of the person + corresponding face
