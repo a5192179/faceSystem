@@ -10,7 +10,7 @@ import os
 
 # input a img, output whether is in facebase
 class faceVerifier:
-    def __init__(self, dataPath = '../data/facebase-good-small.json', similarThreshold = 0.245, ageScale = 1.0):
+    def __init__(self, dataPath = './module/verifyFace/facebase-good-small.json', similarThreshold = 0.245, ageScale = 1.0):
         if os.path.exists(dataPath):
             f = open(dataPath)
             content = f.read()
