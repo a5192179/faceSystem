@@ -43,6 +43,7 @@ class faceDetector:
 
                     # extract the face ROI and grab the ROI dimensions
                     face = image[int(startY*0.8):endY, startX:endX]
+                    # face = image[startY:endY, startX:endX]
                     (fH, fW) = face.shape[:2]
 
                     # ensure the face width and height are sufficiently large
