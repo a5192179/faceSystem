@@ -25,7 +25,7 @@ class faceDetector:
         # ensure at least one face was found
         faces = []
         faceNum = len(detections[0, 0, :, 2])
-        print('faceNum', faceNum)
+        # print('faceNum', faceNum)
         if faceNum > 0:
             # we're making the assumption that each image has only ONE
             # face, so find the bounding box with the largest probability

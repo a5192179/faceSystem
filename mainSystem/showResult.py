@@ -46,7 +46,7 @@ def showResult(mainImg, mainImgInfo, others, othersInfos, infos, bShowResult, bS
 
     begin = max(0, len(infos) - maxInfoNum)
     for i in range(begin, len(infos)):
-        print(i)
+        # print(i)
         imgStr = infos[i]
         cv2.putText(background, imgStr, (border, 15 + mainH + infoEachH * (i - begin)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
     # ===========================================

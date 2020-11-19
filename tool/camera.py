@@ -200,6 +200,9 @@ class Camera():
     def isOpened(self):
         return self.is_opened
 
+    def get_fps(self):
+        return self.cap.get(cv2.CAP_PROP_FPS)
+
     def _start(self):
         if not self.cap.isOpened():
             logging.warning('Camera: starting while cap is not opened!')

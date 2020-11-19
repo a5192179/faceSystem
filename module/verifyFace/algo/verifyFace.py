@@ -35,7 +35,7 @@ class faceVerifier:
             if minDist < 0 or minDist > dist:
                 minDist = dist
                 minIdentity = identity
-        print('minIdentity:', minIdentity, 'minDist:', minDist)
+        # print('minIdentity:', minIdentity, 'minDist:', minDist)
         if minDist < self.similarThreshold:
             bInBase = True
             identity = minIdentity
