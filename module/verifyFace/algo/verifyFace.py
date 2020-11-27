@@ -28,6 +28,8 @@ class faceVerifier:
     def search(self, face, vec):
         minDist = -1
         minIdentity = 'null'
+        secondDist = -1
+        secondIdentity = 'null'
         for identity in self.facebase:
             if identity == 'nextId':
                 continue
@@ -35,8 +37,16 @@ class faceVerifier:
             if minDist < 0 or minDist > dist:
                 minDist = dist
                 minIdentity = identity
+            if secondDist < 0 or (minDist < dist and secondDist > dist):
+                secondDist = dist
+                secondIdentity = identity
         # print('minIdentity:', minIdentity, 'minDist:', minDist)
         if minDist < self.similarThreshold:
+            if secondDist < self.similarThreshold * 0.8 and secondIdentity != minIdentity:
+                deleteID = str(max(int(secondIdentity), int(minIdentity)))
+                del self.facebase[deleteID]
+                print('combine,', minIdentity, ',', secondIdentity, ',delete', deleteID, )
+                minIdentity = str(min(int(secondIdentity), int(minIdentity)))
             bInBase = True
             identity = minIdentity
             age = self.facebase[identity]['age']

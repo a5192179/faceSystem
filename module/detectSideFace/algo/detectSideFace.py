@@ -1,5 +1,7 @@
 import cv2
 import dlib
+# from imutils.face_utils import rect_to_bb
+# from module.detectSideFace.algo.faceAligner import FaceAligner
 # import sys
 # sys.path.append('.')
 
@@ -8,6 +10,7 @@ class sideFaceDetector:
         self.predictor = dlib.shape_predictor(modelPath)
         self.detector = dlib.get_frontal_face_detector()
         self.sideFaceThreshold = sideFaceThreshold
+        # self.faceAlign = FaceAligner(self.predictor)
     
     def isSideFacebyResize(self, img):
         newSize = max(img.shape[0], img.shape[1])
@@ -26,10 +29,18 @@ class sideFaceDetector:
         else:
             return False, rate
 
+    def align(self, img, gray, dets):
+        box = dets[0]
+        faceAligned, M = self.faceAlign.align(img, gray, box)
+        cv2.imshow('ori', img)
+        cv2.imshow('faceAligned', faceAligned)
+        cv2.waitKey(0)
+
     def isSideFacebyDetect(self, img):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         dets = self.detector(gray, 1)
         if len(dets) > 0:
+            # self.align(img, gray, dets)
             shape = self.predictor(img, dets[0])
             u1 = shape.parts()[1].x #close to right boundary
             v1 = shape.parts()[1].y

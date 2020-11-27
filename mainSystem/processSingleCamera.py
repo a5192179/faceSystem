@@ -61,8 +61,18 @@ class singleCameraProcessor(Process):
         args = parser.parse_args()
         # cap = Camera(args)
         # fps = cap.get_fps()
-        cap = cv2.VideoCapture(self.inputStream)
-        fps = cap.get(cv2.CAP_PROP_FPS)
+        bRtsp = False
+        if self.inputStream == '0':
+            inputStream = 0
+            cap = cv2.VideoCapture(inputStream)
+        elif self.inputStream.find('rtsp') != -1:
+            cap = Camera(args)
+            fps = cap.get_fps()
+            bRtsp = True
+        else:
+            cap = cv2.VideoCapture(self.inputStream)
+        if not bRtsp:
+            fps = cap.get(cv2.CAP_PROP_FPS)
         frameId = 0
         lastFrameId = 0
         finalInfos = []
@@ -70,9 +80,12 @@ class singleCameraProcessor(Process):
             # while frameId < 20:
             # grab the next frame from the stream, store the current timestamp, and store the new date
             # _, frame = cap.read()
-            success,frame = cap.read()
-            if not success:
-                break
+            if bRtsp:
+                frame = cap.read()
+            else:
+                success,frame = cap.read()
+                if not success:
+                    break
             frameId += 1
             # print('get frame', frameId)
             if frameId < 20:
@@ -137,7 +150,7 @@ class singleCameraProcessor(Process):
                     #       'gender:', gender,
                     #       'final stay time:', finalStayTime)
                     # print('------')
-                    imgStr = 'id:' + identity + ',age:' + age + ',gender:' + gender + ',stayTime:' + str(finalStayTime)
+                    imgStr = 'ID:' + identity + ', Age:' + age + ', Gender:' + gender + ', Time:' + str(finalStayTime)
                     finalInfos.append(imgStr)
                     outputLine = {"sex": gender, "age":age, "stayTime":finalStayTime}
                     dataList.append(outputLine)
@@ -155,7 +168,11 @@ class singleCameraProcessor(Process):
                 # width = face.shape[1]
                 # high = face.shape[0]
                 # # print('rate:', high/width, 'high:', high, 'width:', width)
-                imgStr = str(bInBase) + ',' + identity + ',' + age + ',' + gender + ',' + str(round(stayTime, 2))
+                if bInBase:
+                    inBaseStr = 'Existing'
+                else:
+                    inBaseStr = 'New'
+                imgStr = inBaseStr + '-ID : ' + identity + '-Age : ' + age + '-Gender : ' + gender + '-Time : ' + str(round(stayTime, 2))
                 faceInfos.append(imgStr)
                 index += 1
                 # cv2.putText(face, imgStr, (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255,255,255), 1, cv2.LINE_AA)

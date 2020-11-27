@@ -13,42 +13,45 @@ def resizeImgIntoFrame(img, H, W):
     return imgNew
 
 def showResult(mainImg, mainImgInfo, others, othersInfos, infos, bShowResult, bSaveResult, savePath):
-    border = 2
-    mainW = 800
-    mainH = 450
+    border = 10
+    mainW = 600
+    mainH = 400
     infoW = mainW
     infoH = 140 + border
-    otherW = 200 + border * 2
+    otherW = 200 + 60 + border * 2
     otherH = mainH + infoH
     maxOtherNum = 4
     maxInfoNum = 8
     otherEachH = math.floor(otherH/maxOtherNum)
     infoEachH = math.floor(infoH/maxInfoNum)
-    background = np.zeros([mainH + infoH, mainW + otherW, 3], dtype='uint8')
+    background = np.ones([border + mainH + infoH, border + mainW + otherW, 3], dtype='uint8') * 255
 
     mainImgShow = resizeImgIntoFrame(mainImg, mainH, mainW)
-    hup = 0
-    hDown = mainImgShow.shape[0]
-    wLeft = 0
-    wRight = mainImgShow.shape[1]
+    hup = border
+    hDown = border + mainImgShow.shape[0]
+    wLeft = border
+    wRight = border + mainImgShow.shape[1]
     background[hup:hDown, wLeft:wRight, :] = mainImgShow
-    cv2.putText(background, mainImgInfo, (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+    cv2.putText(background, mainImgInfo, (border + 20, border + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
 
     for i in range(min(maxOtherNum, len(others))):
         otherImgShow = resizeImgIntoFrame(others[i], otherEachH - 20 - 2*border, otherW - border) #上下留5，字30
-        hup = i * otherEachH
+        hup = border + i * otherEachH
         hDown = hup + otherImgShow.shape[0]
-        wLeft = mainW + 2 * border
+        wLeft = border + mainW + 2 * border
         wRight = wLeft + otherImgShow.shape[1]
         background[hup:hDown, wLeft:wRight, :] = np.copy(otherImgShow)
         imgStr = othersInfos[i]
-        cv2.putText(background, imgStr, (wLeft, hDown + 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255,255,255), 1, cv2.LINE_AA)
+        imgStrs = imgStr.split('-')
+        for i in range(len(imgStrs)):
+            # cv2.putText(background, imgStr, (wLeft, hDown + 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(background, imgStrs[i], (wRight + 10, hup + 20 * (i + 1)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
 
     begin = max(0, len(infos) - maxInfoNum)
     for i in range(begin, len(infos)):
         # print(i)
         imgStr = infos[i]
-        cv2.putText(background, imgStr, (border, 15 + mainH + infoEachH * (i - begin)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+        cv2.putText(background, imgStr, (border, 15 + mainH + infoEachH * (i - begin) + border), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
     # ===========================================
     if bSaveResult:
         imgName = mainImgInfo + '.jpg'
@@ -56,7 +59,7 @@ def showResult(mainImg, mainImgInfo, others, othersInfos, infos, bShowResult, bS
     # ===========================================
     if bShowResult:
         cv2.imshow('img', background)
-        cv2.waitKey(41)
+        cv2.waitKey(200)
 
 
 if __name__ == "__main__":
@@ -70,4 +73,4 @@ if __name__ == "__main__":
     infos = []
     for i in range(12):
         infos.append('1234567890abc-' + str(i))
-    showResult(img, mainImgInfo, others, othersInfos, infos)
+    showResult(img, mainImgInfo, others, othersInfos, infos, True, False, '')
