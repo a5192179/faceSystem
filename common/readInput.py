@@ -24,7 +24,7 @@ class InputReader():
             self.lastFrameTime = time.time()
         elif inputStream.isdecimal():
             self.inputType = 'camera'
-            self.cap = cv2.VideoCapture(inputStream)
+            self.cap = cv2.VideoCapture(int(inputStream))
             self.fps = self.cap.get(cv2.CAP_PROP_FPS)
         else:
             raise BaseException('wrong input:' + inputStream)
@@ -74,6 +74,7 @@ class InputReader():
 if __name__ == "__main__":
     path = "D:/project/touristAnalyse/data/videos/test2.mp4"
     # path = "rtsp://admin:1234abcd@192.168.1.132:554/Streaming/Channels/1"
+    path = '0'
     inputReader = InputReader(path)
     fps = inputReader.getFPS()
     print('set fps', fps)
