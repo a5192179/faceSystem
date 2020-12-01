@@ -1,14 +1,36 @@
 from multiprocessing import Process
+import multiprocessing
 import time
-def func(name, i):
-    print('%s 进程 running'%name)
-    time.sleep(i)
-    print('%s 进程 over'%name)
+def func1(d, name, age):
+    if name in d:
+        print('func1 begin, name:', name, 'age', age, 'd[name]', d[name])
+    else:
+        print('func1 begin, name:', name, 'age', age)
+    d[name] = age + 0.1
+    print('func1 over, name:', name, 'age', age, 'd[name]', d[name])
+
+def func2(d, name, age):
+    if name in d:
+        print('func2 begin, name:', name, 'age', age, 'd[name]', d[name])
+    else:
+        print('func2 begin, name:', name, 'age', age)
+    d[name] = age + 0.2
+    print('func2 over, name:', name, 'age', age, 'd[name]', d[name])
+
+def func3(d, name, age):
+    if name in d:
+        print('func3 begin, name:', name, 'age', age, 'd[name]', d[name])
+    else:
+        print('func3 begin, name:', name, 'age', age)
+    d[name] = age + 0.3
+    print('func3 over, name:', name, 'age', age, 'd[name]', d[name])
     
 if __name__ == '__main__':
-    p1 = Process(target=func, args=('A',1))
-    p2 = Process(target=func, args=('B',2))
-    p3 = Process(target=func, args=('C',3))
+    mgr = multiprocessing.Manager()
+    d = mgr.dict()
+    p1 = Process(target=func1, args=(d, 'A', 1))
+    p2 = Process(target=func2, args=(d, 'A', 2))
+    p3 = Process(target=func3, args=(d, 'C', 3))
     start_time = time.time()
     p1.start()
     p2.start()

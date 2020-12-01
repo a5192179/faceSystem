@@ -1,8 +1,8 @@
 from multiprocessing import Process
-from tool.camera import add_camera_args, Camera
+# from tool.camera import add_camera_args, Camera
 from mainSystem import showResult
 import cv2
-import argparse
+# import argparse
 import datetime
 import os
 import shutil
@@ -13,8 +13,10 @@ from module.verifyFace.algo import verifyFace
 from module.statisticTime import statisticTime
 from module.detectSideFace.algo import detectSideFace
 
+from common import readInput
+
 class singleCameraProcessor(Process):
-    def __init__(self, config, inputStream, cameraID):
+    def __init__(self, config, inputStream, cameraID, identityBase):
         Process.__init__(self)
         self.inputStream = inputStream
         self.cameraID = cameraID
@@ -47,7 +49,11 @@ class singleCameraProcessor(Process):
                 shutil.rmtree(self.resultSaveFolder)
                 # print('remove')
                 os.mkdir(self.resultSaveFolder)
-        
+
+        if 'a' in identityBase:
+            print('init success')
+        else:
+            print('init success')
 
     def run(self):
         print('camera ', self.cameraID, ' run')
@@ -55,24 +61,28 @@ class singleCameraProcessor(Process):
         sideFaceDetector = detectSideFace.sideFaceDetector(sideFaceThreshold = self.sideFaceThreshold)
         faceVerifier = verifyFace.faceVerifier(similarThreshold = self.similarThreshold, ageScale = self.ageScale)
         timeStatistician = statisticTime.timeStatistician(faceVerifier.facebase, self.leaveThreshold, self.leaveErrorThreshold)
-        # print('load model end------------')
-        parser = argparse.ArgumentParser()
-        parser = add_camera_args(parser, self.inputStream)
-        args = parser.parse_args()
+        inputReader = readInput.InputReader(self.inputStream)
+        print('load model end------------')
+        # parser = argparse.ArgumentParser()
+        # parser = add_camera_args(parser, self.inputStream)
+        # args = parser.parse_args()
         # cap = Camera(args)
         # fps = cap.get_fps()
-        bRtsp = False
-        if self.inputStream == '0':
-            inputStream = 0
-            cap = cv2.VideoCapture(inputStream)
-        elif self.inputStream.find('rtsp') != -1:
-            cap = Camera(args)
-            fps = cap.get_fps()
-            bRtsp = True
-        else:
-            cap = cv2.VideoCapture(self.inputStream)
-        if not bRtsp:
-            fps = cap.get(cv2.CAP_PROP_FPS)
+        # cap = Camera(args)
+        # fps = cap.get_fps()
+        # bRtsp = False
+        # if self.inputStream == '0':
+        #     inputStream = 0
+        #     cap = cv2.VideoCapture(inputStream)
+        # elif self.inputStream.find('rtsp') != -1:
+        #     cap = Camera(args)
+        #     fps = cap.get_fps()
+        #     bRtsp = True
+        # else:
+        #     cap = cv2.VideoCapture(self.inputStream)
+        # if not bRtsp:
+        #     fps = cap.get(cv2.CAP_PROP_FPS)
+        fps = inputReader.getFPS()
         frameId = 0
         lastFrameId = 0
         finalInfos = []
@@ -80,12 +90,17 @@ class singleCameraProcessor(Process):
             # while frameId < 20:
             # grab the next frame from the stream, store the current timestamp, and store the new date
             # _, frame = cap.read()
-            if bRtsp:
-                frame = cap.read()
-            else:
-                success,frame = cap.read()
-                if not success:
-                    break
+            # if bRtsp:
+            #     frame = cap.read()
+            # else:
+            #     success,frame = cap.read()
+            #     if not success:
+            #         break
+            frame, bStop = inputReader.read()
+            if bStop:
+                break
+            if frame is None:
+                continue
             frameId += 1
             # print('get frame', frameId)
             if frameId < 20:

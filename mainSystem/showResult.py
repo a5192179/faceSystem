@@ -59,7 +59,7 @@ def showResult(mainImg, mainImgInfo, others, othersInfos, infos, bShowResult, bS
     # ===========================================
     if bShowResult:
         cv2.imshow('img', background)
-        cv2.waitKey(200)
+        cv2.waitKey(20)
 
 
 if __name__ == "__main__":

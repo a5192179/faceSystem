@@ -4,7 +4,7 @@ sys.path.append('.')
 import configparser
 import time
 from mainSystem.processSingleCamera import singleCameraProcessor
-
+import multiprocessing
 
 if __name__ == "__main__":
     cwd = os.getcwd()
@@ -17,13 +17,15 @@ if __name__ == "__main__":
     cf.read(configFile, encoding="utf-8")
 
     processors = []
+    mgr = multiprocessing.Manager()
+    identityBase = mgr.dict()
 
     for oneSection in cf.sections():
         if "camera" in oneSection:
             inputStream = cf.get(oneSection, "input_stream")
             cameraID = cf.get(oneSection, "camera_id")
             print('inputStream:', inputStream)
-            processors.append(singleCameraProcessor(cf, inputStream, cameraID))
+            processors.append(singleCameraProcessor(cf, inputStream, cameraID, identityBase))
 
     for oneWork in processors:
         oneWork.start()
