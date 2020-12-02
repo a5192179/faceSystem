@@ -19,6 +19,7 @@ if __name__ == "__main__":
     processors = []
     mgr = multiprocessing.Manager()
     identityBase = mgr.dict()
+    identityBase['nextId'] = 0
 
     for oneSection in cf.sections():
         if "camera" in oneSection:

@@ -10,14 +10,15 @@ import os
 
 # input a img, output whether is in facebase
 class faceVerifier:
-    def __init__(self, dataPath = './module/verifyFace/facebase-good-small.json', similarThreshold = 0.245, ageScale = 1.0):
-        if os.path.exists(dataPath):
-            f = open(dataPath)
-            content = f.read()
-            self.facebase = json.loads(content, object_pairs_hook=OrderedDict)
-        else:
-            self.facebase = {}
-        print('load facebase end, num:', len(self.facebase))
+    def __init__(self, identityBase, similarThreshold = 0.245, ageScale = 1.0):
+        # if os.path.exists(dataPath):
+        #     f = open(dataPath)
+        #     content = f.read()
+        #     self.facebase = json.loads(content, object_pairs_hook=OrderedDict)
+        # else:
+        #     self.facebase = {}
+        # print('load facebase end, num:', len(self.facebase))
+        self.identityBase = identityBase
         self.faceEmbedder = embedFace.faceEmbedder()
         self.ageGenderEstimater = estimateAgeGender.ageGenderEstimater(ageScale = ageScale)
         self.similarThreshold = similarThreshold
@@ -30,10 +31,10 @@ class faceVerifier:
         minIdentity = 'null'
         secondDist = -1
         secondIdentity = 'null'
-        for identity in self.facebase:
+        for identity in self.identityBase.keys():
             if identity == 'nextId':
                 continue
-            dist = distance.distance(vec, np.array(self.facebase[identity]['vec']), 1)
+            dist = distance.distance(vec, np.array(self.identityBase[identity]['vec']), 1)
             if minDist < 0 or minDist > dist:
                 minDist = dist
                 minIdentity = identity
@@ -41,24 +42,25 @@ class faceVerifier:
                 secondDist = dist
                 secondIdentity = identity
         # print('minIdentity:', minIdentity, 'minDist:', minDist)
-        if minDist < self.similarThreshold:
+        if minDist >= 0 and minDist < self.similarThreshold:
             if secondDist < self.similarThreshold * 0.8 and secondIdentity != minIdentity:
                 deleteID = str(max(int(secondIdentity), int(minIdentity)))
-                del self.facebase[deleteID]
+                del self.identityBase[deleteID]
                 print('combine,', minIdentity, ',', secondIdentity, ',delete', deleteID, )
                 minIdentity = str(min(int(secondIdentity), int(minIdentity)))
             bInBase = True
             identity = minIdentity
-            age = self.facebase[identity]['age']
-            gender = self.facebase[identity]['gender']
+            age = self.identityBase[identity]['age']
+            gender = self.identityBase[identity]['gender']
         else:
+            # identityBase insert
             bInBase = False
-            identity = str(self.facebase['nextId'])
-            self.facebase['nextId'] = self.facebase['nextId'] + 1
+            identity = str(self.identityBase['nextId'])
+            self.identityBase['nextId'] = self.identityBase['nextId'] + 1
             age, gender = self.ageGenderEstimater.estimateAgeGender(face)
             img = 'new'
-            person = {'age':age, 'gender':gender, 'img':img, 'vec':vec.tolist()}
-            self.facebase[identity] = person
+            person = {'age':age, 'gender':gender, 'img':img, 'vec':vec.tolist(), 'beginFrame':-1, 'lastFrame':-1, 'status': 'new'}
+            self.identityBase[identity] = person
         return bInBase, identity, age, gender
 
     def verifyFace(self, face):
@@ -66,11 +68,11 @@ class faceVerifier:
         bInBase, identity, age, gender = self.search(face, vec)
         return bInBase, identity, age, gender
 
-    def saveFacebase(self, savaFolder = '../data/facebase'):
+    def saveFacebase(self, savaFolder = '../data/identityBase'):
         timeStr = datetime.datetime.now().strftime("%Y%m%d-%H-%M-%S")
-        jsonPath = savaFolder + '/facebase' + timeStr + '.json'
+        jsonPath = savaFolder + '/identityBase' + timeStr + '.json'
         f=open(jsonPath,'a',encoding='utf-8')
-        json.dump(self.faceBase, f, indent=2)
+        json.dump(self.identityBase, f, indent=2)
 
     def verifyFaces(self, faces):
         bInBases = []
@@ -86,7 +88,7 @@ class faceVerifier:
         return bInBases, identities, ages, genders
 
     def getAgeAndGender(self, identity):
-        if not identity in self.facebase:
-            print(identity, 'is not in facebase!')
+        if not identity in self.identityBase.keys():
+            print(identity, 'is not in identityBase!')
             return []
-        return self.facebase[identity]['age'], self.facebase[identity]['gender']
+        return self.identityBase[identity]['age'], self.identityBase[identity]['gender']

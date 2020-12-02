@@ -40,7 +40,6 @@ class singleCameraProcessor(Process):
         self.similarThreshold = config.getfloat('algo', 'similarThreshold')
         self.ageScale = config.getfloat('algo', 'ageScale')
 
-
         if self.bSaveResult:
             if not os.path.exists(self.resultSaveFolder):
                 # print('no save path')
@@ -49,18 +48,16 @@ class singleCameraProcessor(Process):
                 shutil.rmtree(self.resultSaveFolder)
                 # print('remove')
                 os.mkdir(self.resultSaveFolder)
-
-        if 'a' in identityBase:
-            print('init success')
-        else:
-            print('init success')
+        
+        self.identityBase = identityBase
+        print('init success')
 
     def run(self):
         print('camera ', self.cameraID, ' run')
         faceDetector = detectFaceCaffe.faceDetector()
         sideFaceDetector = detectSideFace.sideFaceDetector(sideFaceThreshold = self.sideFaceThreshold)
-        faceVerifier = verifyFace.faceVerifier(similarThreshold = self.similarThreshold, ageScale = self.ageScale)
-        timeStatistician = statisticTime.timeStatistician(faceVerifier.facebase, self.leaveThreshold, self.leaveErrorThreshold)
+        faceVerifier = verifyFace.faceVerifier(self.identityBase, similarThreshold = self.similarThreshold, ageScale = self.ageScale)
+        timeStatistician = statisticTime.timeStatistician(self.identityBase, self.leaveThreshold, self.leaveErrorThreshold)
         inputReader = readInput.InputReader(self.inputStream)
         print('load model end------------')
         # parser = argparse.ArgumentParser()
@@ -102,10 +99,12 @@ class singleCameraProcessor(Process):
             if frame is None:
                 continue
             frameId += 1
+
             # print('get frame', frameId)
             if frameId < 20:
                 # print('skip frame', frameId)
                 continue
+
             # add time to frame
             if self.skipMode == 'time':
                 if (frameId - lastFrameId) / fps < self.skipTime:
@@ -122,9 +121,7 @@ class singleCameraProcessor(Process):
                 print('error, self.skipMode is', self.skipMode)
             ts_begin = time.time()
             lastFrameId = frameId
-            # if frameId == 24:
-            #     cv2.waitKey(11000)
-            #     a=1
+
             # detect faces
             ts = time.time()
             oriFaces = faceDetector.detectFace(frame)
