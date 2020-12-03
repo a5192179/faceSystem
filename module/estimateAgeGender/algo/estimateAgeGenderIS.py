@@ -49,4 +49,5 @@ class ageGenderEstimater:
             gender = 'Male'
         else:
             gender = 'Female'
+            age = int(age * self.ageScale)
         return str(age), gender

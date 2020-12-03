@@ -57,7 +57,7 @@ class singleCameraProcessor(Process):
         faceDetector = detectFaceCaffe.faceDetector()
         sideFaceDetector = detectSideFace.sideFaceDetector(sideFaceThreshold = self.sideFaceThreshold)
         faceVerifier = verifyFace.faceVerifier(self.identityBase, similarThreshold = self.similarThreshold, ageScale = self.ageScale)
-        timeStatistician = statisticTime.timeStatistician(self.identityBase, self.leaveThreshold, self.leaveErrorThreshold)
+        timeStatistician = statisticTime.timeStatistician(self.identityBase, self.cameraID, self.leaveThreshold, self.leaveErrorThreshold)
         inputReader = readInput.InputReader(self.inputStream)
         print('load model end------------')
         # parser = argparse.ArgumentParser()

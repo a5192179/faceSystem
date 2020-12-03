@@ -59,7 +59,8 @@ class faceVerifier:
             self.identityBase['nextId'] = self.identityBase['nextId'] + 1
             age, gender = self.ageGenderEstimater.estimateAgeGender(face)
             img = 'new'
-            person = {'age':age, 'gender':gender, 'img':img, 'vec':vec.tolist(), 'beginFrame':-1, 'lastFrame':-1, 'status': 'new'}
+            timeInfo = {}
+            person = {'age':age, 'gender':gender, 'img':img, 'vec':vec.tolist(), 'timeInfo':timeInfo}
             self.identityBase[identity] = person
         return bInBase, identity, age, gender
 
