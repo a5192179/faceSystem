@@ -8,7 +8,7 @@ import os
 import shutil
 import time
 
-from module.detectFace.algo import detectFaceCaffe
+from module.detectFace.algo import detectFaceIF as detectFace
 from module.verifyFace.algo import verifyFace
 from module.statisticTime import statisticTime
 from module.detectSideFace.algo import detectSideFace
@@ -54,7 +54,7 @@ class singleCameraProcessor(Process):
 
     def run(self):
         print('camera ', self.cameraID, ' run')
-        faceDetector = detectFaceCaffe.faceDetector()
+        faceDetector = detectFace.faceDetector()
         sideFaceDetector = detectSideFace.sideFaceDetector(sideFaceThreshold = self.sideFaceThreshold)
         faceVerifier = verifyFace.faceVerifier(self.identityBase, similarThreshold = self.similarThreshold, ageScale = self.ageScale)
         timeStatistician = statisticTime.timeStatistician(self.identityBase, self.cameraID, self.leaveThreshold, self.leaveErrorThreshold)

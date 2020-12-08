@@ -15,8 +15,8 @@ for (i, imagePath) in enumerate(imagePaths):
     print('face:', len(faces), 'img:', imagePath)
     i = 0
     for face in faces:
-        face = np.transpose(face, (1,2,0))
-        face = cv2.cvtColor(face, cv2.COLOR_RGB2BGR)
+        # face = np.transpose(face, (1,2,0))
+        # face = cv2.cvtColor(face, cv2.COLOR_RGB2BGR)
         cv2.imshow('face', face)
         cv2.waitKey(1000)
         print(i)

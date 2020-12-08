@@ -1,7 +1,8 @@
-from module.embedFace.algo import embedFace
+# from module.embedFace.algo import embedFace
+from module.embedFace.algo import embedFaceIF as embedFace
 from module.embedFace.myMath import distance
 # from module.estimateAgeGender.algo import estimateAgeGender
-from module.estimateAgeGender.algo import estimateAgeGenderIS as estimateAgeGender
+from module.estimateAgeGender.algo import estimateAgeGenderIF as estimateAgeGender
 import json
 from collections import OrderedDict
 import numpy as np

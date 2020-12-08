@@ -39,4 +39,5 @@ class faceEmbedder:
         im_data = np.expand_dims(im_data, axis=0)
         vec = self.face_feature_sess.run(self.ff_embeddings,
                                         feed_dict={self.ff_images_placeholder: im_data, self.ff_train_placeholder: False})
+        # vec is a np array with [1, 512]
         return vec

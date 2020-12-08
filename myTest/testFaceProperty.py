@@ -8,7 +8,7 @@ sys.path.append('.')
 # sys.path.append('./module/estimateAgeGender/algo')
 # import estimateAgeGender
 # from algo import estimateAgeGender
-from module.estimateAgeGender.algo import estimateAgeGenderIS
+from module.estimateAgeGender.algo import estimateAgeGenderIF
 import time
 from module.detectFace.algo import detectFaceCaffe
 
@@ -24,7 +24,7 @@ def resizeImgIntoFrame(img, H, W):
 
 # ageGenderEstimater = estimateAgeGender.ageGenderEstimater()
 faceDetector = detectFaceCaffe.faceDetector()
-ageGenderEstimater = estimateAgeGenderIS.ageGenderEstimater()
+ageGenderEstimater = estimateAgeGenderIF.ageGenderEstimater()
 dataset = 'D:/project/faceProperty/data/sameMale'
 # dataset = 'D:/project/AiBox/data/debug1102'
 # dataset = 'D:/project/touristAnalyse/data/testWH'

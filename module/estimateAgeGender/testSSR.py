@@ -8,14 +8,14 @@ sys.path.append('.')
 # sys.path.append('./module/estimateAgeGender/algo')
 # import estimateAgeGender
 # from algo import estimateAgeGender
-from algo import estimateAgeGenderIS
+from algo import estimateAgeGenderIF
 import time
 
 # from common import imgProcess
 
 
 # ageGenderEstimater = estimateAgeGender.ageGenderEstimater()
-ageGenderEstimater = estimateAgeGenderIS.ageGenderEstimater()
+ageGenderEstimater = estimateAgeGenderIF.ageGenderEstimater()
 dataset = 'D:/project/faceProperty/data/old'
 # dataset = 'D:/project/AiBox/data/debug1102'
 # dataset = 'D:/project/touristAnalyse/data/testWH'

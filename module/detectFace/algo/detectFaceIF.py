@@ -31,15 +31,12 @@ class faceDetector:
         aligneds = []
         for j in range(bbox.shape[0]):
             bbox_temp = bbox[j,0:4] # only get the first face
+            if bbox_temp[2] - bbox_temp[0] < 40 or bbox_temp[3] - bbox_temp[1] < 40:
+                continue
             points_temp = points[j,:].reshape((2,5)).T
             nimg = face_align.norm_crop(img, points_temp, mode='non-arcface')
-            src = np.array([
-                [30.2946, 51.6963],
-                [65.5318, 51.5014],
-                [48.0252, 71.7366],
-                [33.5493, 92.3655],
-                [62.7299, 92.2041] ], dtype=np.float32 )
-            nimg = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
-            aligned = np.transpose(nimg, (2,0,1))
-            aligneds.append(aligned)
+            # nimg = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
+            # aligned = np.transpose(nimg, (2,0,1))
+            # aligneds.append(aligned)
+            aligneds.append(nimg)
         return aligneds

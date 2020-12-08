@@ -10,11 +10,15 @@ class InputReader():
                 raise BaseException('miss file:' + inputStream)
             self.cap = cv2.VideoCapture(inputStream)
             self.fps = self.cap.get(cv2.CAP_PROP_FPS)
+            self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            self.high = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         elif inputStream[0:4] == 'rtsp':
             self.inputType = 'rtsp'
             cap = cv2.VideoCapture(inputStream)
             fpsGoal = cap.get(cv2.CAP_PROP_FPS)
             self.fps = fpsGoal
+            self.width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            self.high = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             cap.release()
             self.timeDeltaGoal = 1 / fpsGoal
             # start
@@ -26,6 +30,8 @@ class InputReader():
             self.inputType = 'camera'
             self.cap = cv2.VideoCapture(int(inputStream))
             self.fps = self.cap.get(cv2.CAP_PROP_FPS)
+            self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            self.high = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         else:
             raise BaseException('wrong input:' + inputStream)
         self.noneFrameNum = 0
@@ -70,6 +76,9 @@ class InputReader():
     def release(self):
         if self.inputType == 'videoFile' or self.inputType == 'camera':
             self.cap.release()
+    
+    def getSize(self):
+        return self.width, self.high
 
 if __name__ == "__main__":
     path = "D:/project/touristAnalyse/data/videos/test2.mp4"
