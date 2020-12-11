@@ -82,7 +82,7 @@ def myBar(xs, ys, elementLabels = None, xlabel = None, ylabel = None, title = No
 
 if __name__ == "__main__":
     # xs = [1, 2]
-    # ys = [692, 633]
+    # ys = [164, 94]
     # elementLabels = ['male', 'female']
     # ylabel = 'counting'
     # xlabel = 'gender ID'
@@ -90,17 +90,17 @@ if __name__ == "__main__":
     # ylim = [0]
     # xAxislabels = ['male', 'female']
     # myBar(xs, ys, elementLabels = elementLabels, ylabel = ylabel, xlabel = xlabel, title = title, ylim = ylim)
-    # xs = [1, 2, 3, 4]
-    # ys = [227, 739, 316, 43]
-    # elementLabels = ['0-20', '21-40', '41-60', '61+']
+    # xs = [1, 2, 3]
+    # ys = [61+8+14+6+13, 3+24+8+23+82, 4+4+8]
+    # elementLabels = ['26-30', '31-35', '36-40']
     # ylabel = 'counting'
     # xlabel = 'age group ID'
     # title = 'age of test data'
     # ylim = [0]
     # myBar(xs, ys, elementLabels = elementLabels, ylabel = ylabel, xlabel = xlabel, title = title, ylim = ylim)
-    xs = [0, 1, 2, 3, 4, 5]
-    ys = [292, 791, 329, 182, 34, 0]
-    elementLabels = ['0', '1', '2', '3', '4', '5+']
+    xs = [1, 2, 3, 4, 5]
+    ys = [346, 123, 56, 23, 10]
+    elementLabels = ['1', '2', '3', '4', '5']
     ylabel = 'number of images'
     xlabel = 'number of faces in each image'
     title = 'number of face'

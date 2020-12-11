@@ -36,25 +36,41 @@ class Statistician:
         self.FPPair = []
         self.FNPair = []
 
-    def judge(self, predictFlag, str1, str2):
+    def judge(self, predictFlag, str1, str2, identities):
         if str1 == 'null':
-            return
+            bExist = False
+            for key in identities:
+                if isSame(key, str2):
+                    bExist = True
+                    break
+            if bExist:
+                self.FN += 1
+                self.FNPair.append(str1 + '_' + str2)
+                return False
+            else:
+                self.TN += 1
+                self.TNPair.append(str1 + '_' + str2)
+                return True
         if predictFlag == True:
             if isSame(str1, str2):
                 self.TP += 1
                 self.TPPair.append(str1 + '_' + str2)
+                return True
             else:
                 self.FP += 1
                 self.FPPair.append(str1 + '_' + str2)
+                return False
         else:
-            if isSame(str1, str2):
-                self.FN += 1
-                self.FNPair.append(str1 + '_' + str2)
-            else:
-                self.TN += 1
-                self.TNPair.append(str1 + '_' + str2)
+            raise BaseException('wrong input:' + str1 + str2)
+            # if isSame(str1, str2):
+            #     self.FN += 1
+            #     self.FNPair.append(str1 + '_' + str2)
+            # else:
+            #     self.TN += 1
+            #     self.TNPair.append(str1 + '_' + str2)
 
     def printResult(self):
+        print('all compare num:', self.TP + self.TN + self.FP + self.FN)
         print('acc', (self.TP + self.TN) / (self.TP + self.TN + self.FP + self.FN))
         A=1
 
@@ -98,7 +114,7 @@ if outDir != 'null' :
 
 dataPath = '../data/testFaceIF'
 imgList = getImgList(dataPath)
-embedPath = dataPath + '/emDict1.txt'
+embedPath = dataPath + '/emDictIF.txt'
 
 if os.path.exists(embedPath):
     print('load emdict')
@@ -137,16 +153,17 @@ else:
     # dump the facial embeddings + names to disk
     print("[INFO] serializing {} encodings...".format(total))
     emDict = dict(zip(knownNames, knownEmbeddings))
-    # f = open(embedPath, "wb")
-    # f.write(pickle.dumps(emDict))
-    # f.close()
+    f = open(embedPath, "wb")
+    f.write(pickle.dumps(emDict))
+    f.close()
 
+print('all img:', len(emDict))
 statistician = Statistician()
 
 threshold = 0.4
 identities = {}
 for newKey in emDict:
-    if len(emDict) == 0:
+    if len(identities) == 0:
         identities[newKey] = [newKey]
         continue
     embeddings1 = emDict[newKey]
@@ -167,11 +184,15 @@ for newKey in emDict:
                 nearestDist = dist
     if bSame:
         identities[sameKey].append(newKey)
-        statistician.judge(True, sameKey, newKey)
+        statistician.judge(True, sameKey, newKey, identities)
     else:
-        identities[newKey] = [newKey]
-        statistician.judge(False, sameKey, newKey)
-print('deal time(s):', time.time() - ts)
+        print('dist', dist)
+        if statistician.judge(False, sameKey, newKey, identities):
+            identities[newKey] = [newKey]
+        else:
+            print('key,', newKey, 'exist')
+        
+# print('deal time(s):', time.time() - ts)
 statistician.printResult()
 # ==================================
 # save
