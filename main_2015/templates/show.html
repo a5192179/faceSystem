@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>入 侵 检 测 demo</title>
+  </head>
+  <body>
+    <h1>抓 拍 结 果</h1>
+    <img src="{{ url_for('static',filename='images/0000001.jpg' )}}">
+    <h1>信 息 展 示</h1>
+    <p>
+    	提 示: {{ data.get('info') }}
+    	<br>
+    	入 侵 时 间: {{ data.get('time') }}
+    	<br>
+    	人 像 地 址: {{ data.get('person') }}
+    </p>
+  </body>
+</html>

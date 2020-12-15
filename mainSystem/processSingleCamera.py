@@ -7,8 +7,8 @@ import datetime
 import os
 import shutil
 import time
-
-from module.detectFace.algo import detectFaceIF as detectFace
+from module.detectFace.algo import detectFace as detectFace
+# from module.detectFace.algo import detectFaceIF as detectFace
 from module.verifyFace.algo import verifyFace
 from module.statisticTime import statisticTime
 from module.detectSideFace.algo import detectSideFace

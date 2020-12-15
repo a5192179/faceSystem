@@ -27,7 +27,7 @@ import os
 # =============================
 
 class ageGenderEstimater:
-    def __init__(self, ageScale = 1.0, modelFile = './module/estimateAgeGender/model/ssrnet_3_3_3_64_1.0_1.0.h5', pb_path_sex = "./module/estimateAgeGender/model/face_attribute.pb"):
+    def __init__(self, ageScale = 1.0, modelFile = './module/estimateAgeGender/model/ssrnet_3_3_3_64_1.0_1.0.h5', pb_path_sex = "./module/estimateAgeGender/model/face_attribute.pb", useGPU = False):
         self.model = SSR_net()()
         self.model.load_weights(modelFile)
         self.graph = tf.get_default_graph()

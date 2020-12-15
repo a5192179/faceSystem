@@ -11,10 +11,13 @@ class Args:
         self.threshold = 1.24 #ver dist threshold
 
 class faceDetector:
-    def __init__(self, modelPath = os.path.join(os.path.dirname(__file__), '../model/mtcnn-model')):
+    def __init__(self, modelPath = os.path.join(os.path.dirname(__file__), '../model/mtcnn-model'), useGPU = False):
         self.args = Args()
         self.det_threshold = [0.6,0.7,0.8]
-        ctx = mx.cpu()
+        if useGPU:
+            ctx = mx.gpu()
+        else:
+            ctx = mx.cpu()
         if self.args.det==0:
             detector = MtcnnDetector(model_folder=modelPath, ctx=ctx, num_worker=1, accurate_landmark = True, threshold=self.det_threshold)
         else:

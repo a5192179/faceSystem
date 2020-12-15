@@ -24,9 +24,12 @@ class Args:
         self.threshold = 1.24 #ver dist threshold
 
 class ageGenderEstimater:
-    def __init__(self, ageScale = 1.0, ga_model = './module/estimateAgeGender/model/gamodel-r50/model, 0'):
+    def __init__(self, ageScale = 1.0, ga_model = './module/estimateAgeGender/model/gamodel-r50/model, 0', useGPU = False):
         args = Args()
-        ctx = mx.cpu()
+        if useGPU:
+            ctx = mx.gpu()
+        else:
+            ctx = mx.cpu()
         _vec = args.image_size.split(',')
         assert len(_vec)==2
         image_size = (int(_vec[0]), int(_vec[1]))

@@ -4,8 +4,11 @@ import mxnet as mx
 from sklearn import preprocessing
 import cv2
 class faceEmbedder:
-    def __init__(self, image_size = '112,112', modelPath='./module/embedFace/model/model-r34-amf/model,0'):
-        ctx = mx.cpu()
+    def __init__(self, image_size = '112,112', modelPath='./module/embedFace/model/model-r34-amf/model,0', useGPU = False):
+        if useGPU:
+            ctx = mx.gpu()
+        else:
+            ctx = mx.cpu()
         _vec = image_size.split(',')
         assert len(_vec)==2
         image_size = (int(_vec[0]), int(_vec[1]))

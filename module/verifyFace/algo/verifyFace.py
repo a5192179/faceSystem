@@ -11,7 +11,7 @@ import os
 
 # input a img, output whether is in facebase
 class faceVerifier:
-    def __init__(self, identityBase, similarThreshold = 0.245, ageScale = 1.0):
+    def __init__(self, identityBase, similarThreshold = 0.245, ageScale = 1.0, useGPU = False):
         # if os.path.exists(dataPath):
         #     f = open(dataPath)
         #     content = f.read()
@@ -20,8 +20,8 @@ class faceVerifier:
         #     self.facebase = {}
         # print('load facebase end, num:', len(self.facebase))
         self.identityBase = identityBase
-        self.faceEmbedder = embedFace.faceEmbedder()
-        self.ageGenderEstimater = estimateAgeGender.ageGenderEstimater(ageScale = ageScale)
+        self.faceEmbedder = embedFace.faceEmbedder(useGPU = useGPU)
+        self.ageGenderEstimater = estimateAgeGender.ageGenderEstimater(ageScale = ageScale, useGPU = useGPU)
         self.similarThreshold = similarThreshold
 
     def insert(self, face, vec):

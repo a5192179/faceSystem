@@ -3,7 +3,7 @@ import tensorflow as tf
 import cv2
 
 class faceEmbedder:
-    def __init__(self, ff_pb_path='./module/embedFace/model/20180402-114759.pb'):
+    def __init__(self, ff_pb_path='./module/embedFace/model/20180402-114759.pb', useGPU = False):
         self.graph = tf.get_default_graph()
         self.face_feature_sess = tf.Session()
         with self.face_feature_sess.as_default():
