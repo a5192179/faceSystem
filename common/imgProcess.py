@@ -49,12 +49,78 @@ def getSquareByRect(img, rect, wholeImg):
             newImg = np.hstack((newImg, wholeImg[tlv:tlv+high, tlu+width:+width+addRight, :]))
     return newImg
 
+def getSquareRectByRect(rect, wholeImg):
+    # rect: [left_top.u, left_top.v, width, high]
+    tlu = rect[0] # top left u
+    tlv = rect[1] # top left v
+    width = rect[2]
+    high = rect[3]
+    wholeW = wholeImg.shape[1]
+    wholeH = wholeImg.shape[0]
+    if width > high:
+        base = width - high
+        if base % 2 == 0:
+            addTop = int(base / 2)
+            addButtom = addTop
+        else:
+            addTop = int((base + 1) / 2)
+            addButtom = addTop - 1
+
+        if tlv - addTop < 0:
+            newTlu = tlu
+            newTlv = 0
+            newWidth = width
+            newHigh = high + addTop + addButtom
+        elif tlv + high + addButtom >= wholeH:
+            newTlu = tlu
+            newTlv = wholeH - (high + addTop + addButtom) - 1
+            newWidth = width
+            newHigh = high + addTop + addButtom
+        else:
+            newTlu = tlu
+            newTlv = tlv - addTop
+            newWidth = width
+            newHigh = high + addButtom
+    else:
+        base = high - width
+        if base % 2 == 0:
+            addLeft = int(base / 2)
+            addRight = addLeft
+        else:
+            addLeft = int((base + 1) / 2)
+            addRight = addLeft - 1
+
+        if tlu - addLeft < 0:
+            newTlu = 0
+            newTlv = tlv
+            newWidth = width + addLeft + addRight
+            newHigh = high
+        elif tlu + width + addRight >= wholeW:
+            newTlu = wholeW - (width + addLeft + addRight) - 1
+            newTlv = tlv
+            newWidth = width + addLeft + addRight
+            newHigh = high
+        else:
+            newTlu = tlu - addLeft
+            newTlv = tlv
+            newWidth = width + addRight
+            newHigh = high
+    newRect = [newTlu, newTlv, newWidth, newHigh]
+    return newRect
+
+def getImgByRect(img, rect):
+    # rect: [left_top.u, left_top.v, width, high]
+    newImg = img[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2], :]
+    return newImg
+
+
 def tansISFormat2BGR(img):
     img = np.transpose(img, (1,2,0))
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     return img
 
 def tansBGR2ISFormat(img, rect, wholeImg, rsize = [112, 112]):
+    # rect: [left_top.u, left_top.v, width, high]
     img = getSquareByRect(img, rect, wholeImg)
     img = cv2.resize(img, (rsize[0], rsize[1]))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
