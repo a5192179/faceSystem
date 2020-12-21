@@ -55,7 +55,7 @@
     </div>
     <div style="height: 90%;">
     <img src="{{ url_for('video_feed') }}" style="background-color:#000000;height:80%;" class="content">
-    <div  id="datein" style="background-color:#000000;height:15%;margin-top: 2%;font-size: 14px;font-weight: 400;color: #FFFFFF;line-height: 22px;overflow: auto;"class="content">
+    <div  id="datein" style="background-color:#000000;height:15%;margin-top: 2%;font-size: 14px;font-weight: 400;color: #FFFFFF;line-height: 22px;overflow: auto;" class="content">
     </div>
 </div>
 </div>
@@ -68,6 +68,7 @@
   demo();
   setInterval(function(){
      $("#box").html('')
+     $("#datein").html('')
    demo();
   },3000);
  });
