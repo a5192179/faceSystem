@@ -17,7 +17,7 @@ def drawResult(mainImg, mainImgInfo, others, othersInfos, infos):
     mainW = 600
     mainH = 400
     infoW = mainW
-    infoH = 140 + border
+    infoH = 0 + border
     otherW = 200 + 60 + border * 2
     otherH = mainH + infoH
     maxOtherNum = 4
@@ -47,11 +47,11 @@ def drawResult(mainImg, mainImgInfo, others, othersInfos, infos):
             # cv2.putText(background, imgStr, (wLeft, hDown + 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255,255,255), 1, cv2.LINE_AA)
             cv2.putText(background, imgStrs[i], (wRight + 10, hup + 20 * (i + 1)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 1, cv2.LINE_AA)
 
-    begin = max(0, len(infos) - maxInfoNum)
-    for i in range(begin, len(infos)):
-        # print(i)
-        imgStr = infos[i]
-        cv2.putText(background, imgStr, (border, 15 + mainH + infoEachH * (i - begin) + border), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
+    # begin = max(0, len(infos) - maxInfoNum)
+    # for i in range(begin, len(infos)):
+    #     # print(i)
+    #     imgStr = infos[i]
+    #     cv2.putText(background, imgStr, (border, 15 + mainH + infoEachH * (i - begin) + border), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
 
     return background
 

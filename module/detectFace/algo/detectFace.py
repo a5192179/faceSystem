@@ -33,3 +33,43 @@ class faceDetector:
         # cv2.waitKey(0)
         return faces
                 
+# class faceDetector:
+#     def __init__(self, modelPath = './module/detectFace/model/shape_predictor_68_face_landmarks.dat', useGPU = False):
+#         # load our serialized face detector from disk
+#         print("[INFO] loading face detector...")
+#         self.detector = dlib.get_frontal_face_detector()
+#         predictor = dlib.shape_predictor(modelPath)
+#         self.fa = FaceAligner(predictor)
+
+#     def detectFace(self, img):
+#         imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#         # face detector
+#         # ts = time.time()
+#         rects = self.detector(imgGray, 1)
+#         # print('time:', time.time() - ts)
+#         (h, w) = img.shape[:2]
+#         # loop over the detections
+#         faces = []
+#         if rects.__len__() > 0:
+#             for oriRect in rects:
+#                 (fX, fY, fW, fH) = rect_to_bb(oriRect)
+#                 # ensure the face width and height are sufficiently large
+#                 if fW < 20 or fH < 20:
+#                     continue
+#                 oriRectList = [oriRect.left(), oriRect.top(), oriRect.width(), oriRect.height()]
+#                 temp = imgProcess.getImgByRect(img, oriRectList)
+#                 # cv2.imshow('ori', temp)
+#                 newRectList = imgProcess.getSquareRectByRect(oriRectList, img)
+#                 temp = imgProcess.getImgByRect(img, newRectList)
+#                 # cv2.imshow('new', temp)
+#                 dlibRect = dlib.rectangle(newRectList[0], newRectList[1], newRectList[0] + newRectList[2], newRectList[1] + newRectList[3])
+#                 face = self.fa.align(img, imgGray, dlibRect)
+#                 # cv2.imshow('aligh', face)
+#                 # cv2.waitKey(0)
+#                 face = cv2.resize(face, (112, 112))
+#                 faces.append(face)
+#         # faceOri = img[fY:fY+fH+1, fX:fX+fW+1, :]
+#         # cv2.imshow('ori', faceOri)
+#         # cv2.imshow('new', face)
+#         # cv2.waitKey(0)
+#         return faces

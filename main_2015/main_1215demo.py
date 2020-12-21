@@ -73,6 +73,15 @@ def show():
         json_datas = {}
     return jsonify(json_datas)
 
+@app.route("/leave")
+def leave():
+    if os.path.exists("./main_2015/leave.json"):
+        with open("./main_2015/leave.json", "r", encoding='utf8') as f:
+            json_datas = json.load(f)
+    else:
+        json_datas = {}
+    return jsonify(json_datas)
+
 if __name__ == "__main__":
     cwd = os.getcwd()
     configFile = os.path.join(cwd, "./config/config.ini")

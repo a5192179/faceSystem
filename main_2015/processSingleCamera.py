@@ -182,7 +182,7 @@ class singleCameraProcessor(Process):
                     #       'gender:', gender,
                     #       'final stay time:', finalStayTime)
                     # print('------')
-                    imgStr = 'ID:' + identity + ', Age:' + age + ', Gender:' + gender + ', Time:' + str(finalStayTime)
+                    imgStr = 'ID:' + identity + ', Age:' + age + ', Gender:' + gender + ', Time:' + str(round(finalStayTime, 2))
                     finalInfos.append(imgStr)
                     outputLine = {"sex": gender, "age":age, "stayTime":finalStayTime}
                     dataList.append(outputLine)
@@ -234,16 +234,17 @@ class singleCameraProcessor(Process):
                 time.sleep(0.28)
                 continue
 
-            writeJson(faces, bInBases, identities, ages, genders, stayTimes)
+            writeFrameJson(faces, bInBases, identities, ages, genders, stayTimes)
+            writeFinalJson(finalInfos)
             # ==================
             # self.test = len(self.Q.queue)
             # print('run, self.test', self.test)
             # print('len(self.Q.queue):', len(self.Q.queue))
             print('-------------frame end, id:', frameId, '--------------')
 
-def writeJson(faces, bInBases, identities, ages, genders, stayTimes, jsonPath = './main_2015/intrusion.json'):
+def writeFrameJson(faces, bInBases, identities, ages, genders, stayTimes, jsonPath = './main_2015/intrusion.json'):
     infoList = []
-    index = 0 
+    index = 0
     for face in faces:
         info = {}
         # bInBase = bInBases[index]
@@ -251,9 +252,9 @@ def writeJson(faces, bInBases, identities, ages, genders, stayTimes, jsonPath = 
         age = ages[index]
         gender = genders[index]
         stayTime = stayTimes[index]
-        info['identity'] = identity + ' ' + age + ' ' + gender
-        # info['age'] = age
-        # info['gender'] = gender
+        info['identity'] = identity
+        info['age'] = age
+        info['gender'] = gender
         info['stayTime'] = str(round(stayTime, 2))
         img = cv2.imencode('.jpg', face)[1]
         personImg = str(base64.b64encode(img))[2:-1]
@@ -279,6 +280,15 @@ def writeJson(faces, bInBases, identities, ages, genders, stayTimes, jsonPath = 
                 infoList.append(item_dict)
         with open(jsonPath, 'w', encoding='utf-8') as f:
             json.dump(infoList, f, ensure_ascii=False)
+
+def writeFinalJson(finalInfos, jsonPath = './main_2015/leave.json'):
+    infoList = []
+    index = 0
+    finalInfoDict = {'leave':finalInfos}
+
+    infoList.append(finalInfoDict)
+    with open(jsonPath, 'w', encoding='utf-8') as f:
+        json.dump(infoList, f, ensure_ascii=False)
 
 # def json_str(personImg, personTime, personPath):
 #     dict = {}

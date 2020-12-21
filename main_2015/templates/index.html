@@ -5,7 +5,9 @@
 <title>人脸识别</title>
 <style type="text/css">
     html{
-        background: url("{{url_for('static',filename='images/bg.png')}}") no-repeat;
+        background: url("{{url_for('static',filename='images/bg.png')}}") no-repeat fixed center;
+        background-size:100% 100%;
+        height: 100%;
     }
     .innerbox.box::-webkit-scrollbar{
             width: 4px;    
@@ -17,15 +19,23 @@
             background: rgba(0,0,0,0.2);
         }
         .innerbox::-webkit-scrollbar-track{
-            -webkit-box-shadow: inset 0 0 5pxrgba(216,216,216,1);
+            -webkit-box-shadow: inset 0 0 5px rgba(216,216,216,1);
             border-radius: 0;
             background: rgba(0,0,0,0.1);
 
         }
+        .content{
+            width:80%;float:left;
+        }
+        @media screen and (max-width: 1910px) {
+            .content {
+                width:63%;float:left;
+    }
+}
     </style>
 </head>
-<body style="margin: 0;padding: 0;">
-<div id="container" style="margin: 0 180px;">
+<body style="margin: 0;padding: 0;height: 97%;">
+<div id="container" style="margin: 0 180px;height: 100%;">
 <div id="header" style="background-color:rbg(0,0,0,0);">
 <div style="margin: 18px 0;">
     <img src="{{ url_for('static',filename='images/logo.png' )}}" style="vertical-align:middle;">
@@ -34,16 +44,20 @@
 </div>
 
 </div>
-<div style="height: 800px;background-color: #1B1B25;">
+<div style="height: 85%;;background-color: #1B1B25;">
     <div style="margin: 14px 0;font-size: 22px;font-weight: 500;color: #FFFFFF;line-height: 33px;">
         入 侵 检 测 算 法
     </div>
-    <div class="innerbox" style="height: 750px;vertical-align:middle;overflow: auto;float:right;width: 18%;">
+    <div class="innerbox" style="height: 90%;vertical-align:middle;overflow: auto;float:right;width:265px;">
     <div style="font-size: 24px;font-weight: 500;color: #FFFFFF;line-height: 36px;margin-bottom: 24px;">人脸库信息</div>
     <div style="font-size: 14px;font-weight: 400;color: #FFFFFF;line-height: 22px;margin-bottom: 24px;">显示最新的人脸库信息</div>
     <div id="box" style="height:auto;overflow: auto;"></div>
     </div>
-    <img src="{{ url_for('video_feed') }}" style="background-color:#000000;width:80%;height:700px;float:left;">
+    <div style="height: 90%;">
+    <img src="{{ url_for('video_feed') }}" style="background-color:#000000;height:80%;" class="content">
+    <div  id="datein" style="background-color:#000000;height:15%;margin-top: 2%;font-size: 14px;font-weight: 400;color: #FFFFFF;line-height: 22px;overflow: auto;"class="content">
+    </div>
+</div>
 </div>
 <ol id="divCustomers">
 </div>
@@ -52,11 +66,10 @@
 <script type="text/javascript"  >
  $(function(){
   demo();
-
   setInterval(function(){
      $("#box").html('')
    demo();
-  },10000);
+  },3000);
  });
 function demo() {
 console.log("我是jquery")
@@ -69,10 +82,23 @@ $.ajax({
     var img = data[0].path
     let len=data.length
     for(let i=0;i<len;i++){
-        $("#box").append('<div style="vertical-align:middle;display:flex;margin-bottom:24px;color:#fff">'+' <img style="width:120px;height:160px;background:#D8D8D8;"'+'src="data:image/png;base64,'+data[i].person+'"'+'">'+'<div style="font-size:14px;font-weight:400;color:#FFFFFF;line-height:22px;vertical-align:middle;margin-left:4px">'+data[i].identity+'<br>'+data[i].stayTime+'</div>'+'</div>'+'<br>')
+        $("#box").append('<div style="vertical-align:middle;display:flex;margin-bottom:24px;color:#fff">'+' <img style="width:120px;height:160px;background:#D8D8D8;"'+'src="data:image/png;base64,'+data[i].person+'"'+'">'+'<div style="font-size:14px;font-weight:400;color:#FFFFFF;line-height:22px;vertical-align:middle;margin-left:4px">'+"<span>ID</span>&nbsp;&nbsp;"+data[i].identity+'<br>'+"<span>性别</span>&nbsp;&nbsp;"+data[i].gender+'<br>'+"<span>年龄</span>&nbsp;&nbsp;"+data[i].age+"&nbsp;<span>岁</span>"+'<br>'+"<span>停留时间</span>&nbsp;&nbsp;"+data[i].stayTime+"&nbsp;<span>秒</span>"+'</div>'+'</div>'+'<br>')
     }
         }
-})  
+});
+$.ajax({
+    url: "/leave",
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+    var str="";
+    console.log(data[0])
+    let len=data[0].leave.length
+    for(let i=0;i<len;i++){
+        $("#datein").append('<div style="font-size: 14px;font-weight: 400;color: #FFFFFF;line-height: 22px;vertical-align:middle;margin:0 24px">'+data[0].leave[i]+'</div>')
+    }
+        }
+}) 
 };
 
     </script>
